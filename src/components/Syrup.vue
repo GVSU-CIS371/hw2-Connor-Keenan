@@ -1,58 +1,10 @@
 <template>
-  <div class="syrup" :style="syrupStyle" v-if="selectedSyrup !== 'No Syrup'">
-    <div class="drizzle" v-if="selectedSyrup !== 'No Syrup'" :style="drizzleStyle"></div>
-  </div>
+  <div class="syrup" :style="{ backgroundColor: beverageStore.currentSyrup.color }"></div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-
-// Define props for the syrup type
-const props = defineProps<{
-  selectedSyrup?: string;
-}>();
-
-// Compute dynamic styles based on selected syrup
-const syrupStyle = computed(() => {
-  const styles: Record<string, string> = {};
-  
-  switch(props.selectedSyrup) {
-    case 'Vanilla':
-      styles.backgroundColor = 'rgba(250, 240, 230, 0.7)';
-      break;
-    case 'Caramel':
-      styles.backgroundColor = 'rgba(195, 129, 84, 0.7)';
-      break;
-    case 'Hazelnut':
-      styles.backgroundColor = 'rgba(161, 114, 85, 0.7)';
-      break;
-    default:
-      styles.backgroundColor = '#c6c6c6'; // Default color from original
-  }
-  
-  return styles;
-});
-
-// Compute dynamic drizzle styles based on selected syrup
-const drizzleStyle = computed(() => {
-  const styles: Record<string, string> = {};
-  
-  switch(props.selectedSyrup) {
-    case 'Vanilla':
-      styles.backgroundColor = 'rgba(250, 240, 230, 0.9)';
-      break;
-    case 'Caramel':
-      styles.backgroundColor = 'rgba(195, 129, 84, 0.9)';
-      break;
-    case 'Hazelnut':
-      styles.backgroundColor = 'rgba(161, 114, 85, 0.9)';
-      break;
-    default:
-      styles.backgroundColor = '#c6c6c6';
-  }
-  
-  return styles;
-});
+import { useBeverageStore } from "../stores/beverageStore";
+const beverageStore = useBeverageStore();
 </script>
 
 <style lang="scss" scoped>

@@ -1,11 +1,9 @@
 <template>
   <div>
     <Beverage 
-      :isIced="beverageStore.currentTemp() === 'Cold'"
-      :selectedBase="beverageStore.currentBase()"
-      :selectedCreamer="beverageStore.currentCreamer()"
-      :selectedSyrup="beverageStore.currentSyrup()"
+      :isIced="beverageStore.currentTemp === 'Cold'"
     />
+    
     <ul>
       <li>
         <template v-for="temp in beverageStore.temps" :key="temp">
@@ -13,9 +11,9 @@
             <input
               type="radio"
               name="temperature"
-              :id="`r${temp}`"
               :value="temp"
-              @change="updateTemp(temp)"
+              :checked="beverageStore.currentTemp === temp"
+              @change="beverageStore.currentTemp = temp"
             />
             {{ temp }}
           </label>
@@ -28,9 +26,9 @@
             <input
               type="radio"
               name="baseBeverage"
-              :id="`b${base.id}`"
-              :value="base.name"
-              @change="updateBase(base.name)"
+              :value="base"
+              :checked="beverageStore.currentBase.id === base.id"
+              @change="beverageStore.currentBase = base"
             />
             {{ base.name }}
           </label>
@@ -43,9 +41,9 @@
             <input
               type="radio"
               name="syrup"
-              :id="`s${syrup.id}`"
-              :value="syrup.name"
-              @change="updateSyrup(syrup.name)"
+              :value="syrup"
+              :checked="beverageStore.currentSyrup.id === syrup.id"
+              @change="beverageStore.currentSyrup = syrup"
             />
             {{ syrup.name }}
           </label>
@@ -58,9 +56,9 @@
             <input
               type="radio"
               name="creamer"
-              :id="`c${creamer.id}`"
-              :value="creamer.name"
-              @change="updateCreamer(creamer.name)"
+              :value="creamer"
+              :checked="beverageStore.currentCreamer.id === creamer.id"
+              @change="beverageStore.currentCreamer = creamer"
             />
             {{ creamer.name }}
           </label>
@@ -71,20 +69,20 @@
     <input 
       type="text" 
       placeholder="Beverage Name" 
-      :value="beverageStore.beverageName()"
-      @input="updateName(($event.target as HTMLInputElement).value)"
+      v-model="beverageStore.currentName"
     />
     <button @click="beverageStore.makeBeverage()">Make Beverage</button>
   
     <div id="beverage-container" style="margin-top: 20px">
-      <div v-if="beverageStore.savedBeverages().length > 0">
-        <template v-for="beverage in beverageStore.savedBeverages()" :key="beverage.id">
+      <div v-if="beverageStore.beverages.length > 0">
+        <template v-for="beverage in beverageStore.beverages" :key="beverage.id">
           <label>
             <input
               type="radio"
               name="savedBeverage"
-              :checked="beverage.id === beverageStore.selectedBeverageId()"
-              @click="beverageStore.showBeverage(beverage.id)"
+              :value="beverage"
+              :checked="beverageStore.currentBeverage?.id === beverage.id"
+              @change="beverageStore.showBeverage(beverage)"
             />
             {{ beverage.name }}
           </label>
@@ -99,29 +97,7 @@ import Beverage from "./components/Beverage.vue";
 import { useBeverageStore } from "./stores/beverageStore";
 
 const beverageStore = useBeverageStore();
-
-// Methods to update store values
-function updateTemp(temp: string) {
-  beverageStore.setTemperature(temp);
-}
-
-function updateBase(base: string) {
-  beverageStore.setBase(base);
-}
-
-function updateSyrup(syrup: string) {
-  beverageStore.setSyrup(syrup);
-}
-
-function updateCreamer(creamer: string) {
-  beverageStore.setCreamer(creamer);
-}
-
-function updateName(name: string) {
-  beverageStore.setName(name);
-}
 </script>
-
 <style lang="scss">
 body,
 html {

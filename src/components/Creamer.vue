@@ -1,66 +1,22 @@
 <template>
-  <div class="froth" :style="creamerStyle" v-if="selectedCreamer !== 'No Creamer'">
-    <div v-for=" in 5" class="foam" :style="foamStyle"></div>
+  <div 
+    class="froth" 
+    :style="{ 
+      backgroundColor: beverageStore.currentCreamer.color, 
+      transform: noSyrup ? 'translateY(400%)' : 'translateY(350%)' 
+    }"
+  >
+    <div v-for="n in 5" :key="n" class="foam"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { useBeverageStore } from "../stores/beverageStore";
+const beverageStore = useBeverageStore();
 
-// Define props for the creamer type and syrup status
-const props = defineProps<{
-  selectedCreamer?: string;
+defineProps<{
   noSyrup?: boolean;
 }>();
-
-// Compute dynamic styles based on selected creamer
-const creamerStyle = computed(() => {
-  const styles: Record<string, string> = {};
-  
-  switch(props.selectedCreamer) {
-    case 'Milk':
-      styles.backgroundColor = '#e8e8e8';
-      break;
-    case 'Cream':
-      styles.backgroundColor = '#f0e6cc';
-      break;
-    case 'Half & Half':
-      styles.backgroundColor = '#f5e9d0';
-      break;
-    default:
-      styles.backgroundColor = '#c6c6c6'; // Default color from original
-  }
-  
-  // Adjust position based on whether syrup is present
-  if (props.noSyrup) {
-    styles.transform = 'translateY(400%)';
-  } else {
-    styles.transform = 'translateY(350%)';
-  }
-  
-  return styles;
-});
-
-// Compute dynamic foam styles based on selected creamer
-const foamStyle = computed(() => {
-  const styles: Record<string, string> = {};
-  
-  switch(props.selectedCreamer) {
-    case 'Milk':
-      styles.background = '#f0f0f0';
-      break;
-    case 'Cream':
-      styles.background = '#f8f0dd';
-      break;
-    case 'Half & Half':
-      styles.background = '#f9f0dd';
-      break;
-    default:
-      styles.background = '#e4e0d2'; // Default color from original
-  }
-  
-  return styles;
-});
 </script>
 
 <style lang="scss" scoped>
